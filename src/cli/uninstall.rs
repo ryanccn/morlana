@@ -87,6 +87,34 @@ impl super::Command for UninstallCommand {
         util::safe_remove_file("/Applications/Nix Apps")?;
         util::safe_remove_file("/etc/static")?;
 
+        util::log::info("restoring /etc files before nix-darwin");
+
+        for (from, to) in fs::read_dir("/etc")?
+            .filter_map(|entry| entry.ok().map(|e| e.path()))
+            .filter_map(|entry| {
+                if !entry.is_file() {
+                    return None;
+                }
+
+                entry.file_name().and_then(|f| {
+                    f.to_str().and_then(|f| {
+                        f.strip_suffix(".before-nix-darwin")
+                            .map(|f| (entry.clone(), PathBuf::from("/etc").join(f)))
+                            .filter(|(_, n)| !n.exists())
+                    })
+                })
+            })
+        {
+            fs::rename(&from, &to)?;
+
+            util::log::warn(format!(
+                "{} {} {}",
+                from.display(),
+                "=>".dimmed(),
+                to.display()
+            ));
+        }
+
         util::log::info("recovering nix daemon into launchctl");
 
         if PathBuf::from("/nix/store").is_dir() {
@@ -94,14 +122,10 @@ impl super::Command for UninstallCommand {
             if !nix_daemon.exists() {
                 util::safe_remove_file(&nix_daemon)?;
 
-                if !Command::new("launchctl")
+                Command::new("launchctl")
                     .args(["remove", "org.nixos.nix-daemon"])
                     .stdout(Stdio::null())
-                    .status()?
-                    .success()
-                {
-                    bail!("failed to remove `org.nixos.nix-daemon` from launchctl");
-                }
+                    .status()?;
 
                 match fs::copy("/nix/var/nix/profiles/default/Library/LaunchDaemons/org.nixos.nix-daemon.plist", &nix_daemon) {
                     Ok(_) => {
@@ -133,34 +157,6 @@ impl super::Command for UninstallCommand {
         let current_system_path = PathBuf::from("/run/current-system");
         if current_system_path.is_symlink() {
             util::safe_remove_file(&current_system_path)?;
-        }
-
-        util::log::info("restoring /etc files before nix-darwin");
-
-        for (from, to) in fs::read_dir("/etc")?
-            .filter_map(|entry| entry.ok().map(|e| e.path()))
-            .filter_map(|entry| {
-                if !entry.is_file() {
-                    return None;
-                }
-
-                entry.file_name().and_then(|f| {
-                    f.to_str().and_then(|f| {
-                        f.strip_suffix(".before-nix-darwin")
-                            .map(|f| (entry.clone(), PathBuf::from("/etc").join(f)))
-                            .filter(|(_, n)| !n.exists())
-                    })
-                })
-            })
-        {
-            fs::rename(&from, &to)?;
-
-            util::log::info(format!(
-                "{} {} {}",
-                from.display(),
-                "=>".dimmed(),
-                to.display()
-            ));
         }
 
         util::log::success("nix-darwin has been uninstalled!");
