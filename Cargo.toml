@@ -1,0 +1,35 @@
+[package]
+name    = "morlana"
+version = "0.1.0"
+edition = "2021"
+
+description = "nix-darwin utilities"
+authors     = ["Ryan Cao <hello@ryanccn.dev>"]
+license     = "GPL-3.0-only"
+repository  = "https://github.com/ryanccn/morlana.git"
+
+categories = ["command-line-utilities", "development-tools"]
+keywords   = ["nix", "darwin", "macos", "system"]
+
+[dependencies]
+clap          = { version = "4.5.17", features = ["derive", "env", "string"] }
+clap_complete = "4.5.26"
+color-eyre    = "0.6.3"
+enum_dispatch = "0.3.13"
+eyre = "0.6.12"
+nix = { version = "0.29.0", features = ["process", "user"] }
+owo-colors    = "4.0.0"
+serde         = { version = "1.0.209", features = ["derive"] }
+serde_json    = "1.0.128"
+users = { version = "0.11.0", default-features = false, features = ["cache"] }
+
+[lints.clippy]
+all      = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+perf     = { level = "warn", priority = -1 }
+
+redundant_closure_for_method_calls = "allow"
+module_name_repetitions            = "allow"
+
+[lints.rust]
+unsafe_code = "forbid"
