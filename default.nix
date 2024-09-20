@@ -58,7 +58,7 @@ rustPlatform.buildRustPackage rec {
     in
     ''
       wrapProgram $out/bin/morlana \
-        --prefix PATH : ${lib.makeBinPath wrapBins}
+        --suffix PATH : ${lib.makeBinPath wrapBins}
 
       installShellCompletion --cmd ${pname} \
         --bash <("$out/bin/${pname}" completions bash) \

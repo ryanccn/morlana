@@ -26,7 +26,17 @@ fn build_uninstall_system() -> Result<PathBuf> {
         .replace("<HOST_PLATFORM>", &format!("{}-darwin", env::consts::ARCH));
 
     let output = Command::new("nix")
-        .args(["build", "--impure", "--json", "--expr"])
+        .args([
+            "build",
+            "--impure",
+            "--json",
+            "--no-link",
+            "--extra-experimental-features",
+            "nix-command",
+            "--extra-experimental-features",
+            "flakes",
+            "--expr",
+        ])
         .arg(&expr_template)
         .stderr(Stdio::inherit())
         .output()?;
