@@ -8,12 +8,15 @@ nix run github:ryanccn/morlana
 
 ## Features
 
-- Built-in [nix-output-monitor](https://github.com/maralorn/nix-output-monitor) and [nvd](https://gitlab.com/khumba/nvd) support
+- Support for better build logs with [nix-output-monitor](https://github.com/maralorn/nix-output-monitor)
+- Support for diffing with [nvd](https://gitlab.com/khumba/nvd) before switching configurations
 - Confirmation prompts for important actions
-- Works as a standalone binary
 - Flakes-first (_does not work with channels setups at the moment_)
-- More aesthetic logging
 - Improved uninstaller logic
+  - Addresses https://github.com/NixOS/nix/issues/3261
+  - Restores `.before-nix-darwin` files automagically
+- Works as a standalone binary
+- More aesthetic logging
 
 ## Getting started
 
