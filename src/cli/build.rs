@@ -1,5 +1,5 @@
 use clap::{Parser, ValueHint};
-use eyre::Result;
+use eyre::{eyre, Result};
 use owo_colors::OwoColorize as _;
 
 use crate::stages;
@@ -44,7 +44,12 @@ impl super::Command for BuildCommand {
         let flake_attr = self
             .attr
             .clone()
-            .unwrap_or(format!("darwinConfigurations.{}", util::hostname()?));
+            .or_else(|| {
+                util::hostname()
+                    .ok()
+                    .map(|hostname| format!("darwinConfigurations.{hostname}"))
+            })
+            .ok_or_else(|| eyre!("no attribute was provided and one could not be inferred!"))?;
 
         util::log::info(format!(
             "building system {}",
