@@ -5,9 +5,9 @@ use std::{
     process::{Command, Stdio},
 };
 
-use eyre::{bail, eyre, Result};
+use eyre::{eyre, Result};
 
-use crate::util;
+use crate::util::{self, CommandExt as _};
 
 #[derive(serde::Deserialize)]
 struct NixTopLevelData {
@@ -39,17 +39,13 @@ pub fn build(
         .args(extra_build_flags)
         .args(["--", &format!("{flake_url}#{flake_attr}.system")])
         .stderr(Stdio::inherit())
-        .output()?;
-
-    if !build_output.status.success() {
-        bail!("failed to build system with nix");
-    }
+        .error_for_status("failed to build system with nix")?;
 
     let build_data: Vec<NixTopLevelData> = serde_json::from_slice(&build_output.stdout)?;
 
     let out = build_data
         .first()
-        .ok_or_else(|| eyre!("failed to build system with nix"))?
+        .ok_or_else(|| eyre!("failed to obtain system build data with nix"))?
         .outputs
         .out
         .parse::<PathBuf>()?;

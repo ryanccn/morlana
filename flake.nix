@@ -98,9 +98,6 @@
               clippy
               rust-analyzer
 
-              git-cliff # changelog generator
-              taplo # TOML toolkit
-
               cargo-audit
               cargo-bloat
               cargo-expand
@@ -128,9 +125,6 @@
           inherit (packages) morlana;
           default = packages.morlana;
         }
-        // (lib.attrsets.mapAttrs' (
-          name: value: lib.nameValuePair "check-${name}" value
-        ) self.checks.${system})
       );
 
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);

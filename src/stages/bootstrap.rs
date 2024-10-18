@@ -1,4 +1,7 @@
-use std::{env, fs, path::PathBuf};
+use std::{
+    env, fs,
+    path::{Path, PathBuf},
+};
 
 use eyre::{bail, eyre, Result};
 
@@ -11,7 +14,7 @@ fn gen_flake_template() -> Result<String> {
 fn gen_system_template() -> Result<String> {
     let mut template = include_str!("../templates/_bootstrap.nix").to_owned();
 
-    if PathBuf::from("/nix/var/nix/db").exists() {
+    if Path::new("/nix/var/nix/db").exists() {
         template = template.replace("# services.nix-daemon.enable", "services.nix-daemon.enable");
     }
 
@@ -33,7 +36,7 @@ pub fn bootstrap() -> Result<PathBuf> {
     let system_template = gen_system_template()?;
 
     let bootstrap_dir =
-        PathBuf::from(env::var_os("HOME").ok_or_else(|| eyre!("could not locate HOME"))?)
+        Path::new(&env::var_os("HOME").ok_or_else(|| eyre!("could not locate HOME"))?)
             .join("flake");
 
     if bootstrap_dir.exists() {

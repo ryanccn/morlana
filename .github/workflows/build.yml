@@ -16,9 +16,14 @@ jobs:
 
     strategy:
       matrix:
-        system:
-          - aarch64-darwin
-          - x86_64-darwin
+        target:
+          - aarch64-apple-darwin
+          - x86_64-apple-darwin
+        include:
+          - target: aarch64-apple-darwin
+            system: aarch64-darwin
+          - target: x86_64-apple-darwin
+            system: x86_64-darwin
       fail-fast: false
 
     runs-on: macos-latest

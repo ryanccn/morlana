@@ -1,24 +1,22 @@
 use std::{
     env,
     ffi::{CString, OsStr},
-    fs,
-    io::{self},
+    fs, io,
     path::{Path, PathBuf},
     process::{Command, Stdio},
 };
 
-use eyre::{bail, Result};
+use eyre::Result;
 
+mod command_ext;
+pub use command_ext::CommandExt;
 pub mod log;
 
 pub fn hostname() -> Result<String> {
     let output = Command::new("scutil")
         .args(["--get", "LocalHostName"])
-        .output()?;
-
-    if !output.status.success() {
-        bail!("failed to obtain hostname from scutil");
-    }
+        .stderr(Stdio::inherit())
+        .error_for_status("failed to obtain hostname from scutil")?;
 
     Ok(String::from_utf8(output.stdout)?.trim().to_owned())
 }
@@ -66,11 +64,7 @@ pub fn default_flake() -> Result<String> {
     let output = Command::new("nix")
         .args(["flake", "metadata", "--json"])
         .stderr(Stdio::inherit())
-        .output()?;
-
-    if !output.status.success() {
-        bail!("failed to obtain flake metadata");
-    }
+        .error_for_status("failed to obtain flake metadata")?;
 
     let NixFlakeMetadata { resolved_url } = serde_json::from_slice(&output.stdout)?;
     Ok(resolved_url)

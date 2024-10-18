@@ -64,7 +64,7 @@ impl super::Command for BuildCommand {
             true,
         )?;
 
-        util::log::success(out.to_string_lossy().dimmed());
+        util::log::success(out.display().dimmed());
 
         Ok(())
     }

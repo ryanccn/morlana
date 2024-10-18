@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use clap::Parser;
 use eyre::Result;
@@ -21,7 +21,7 @@ impl super::Command for InitCommand {
             return Ok(());
         }
 
-        if PathBuf::from("/run/current-system").exists() {
+        if Path::new("/run/current-system").exists() {
             util::log::warn("nix-darwin seems to already be installed!");
             if !self.no_confirm
                 && !util::log::confirm(
@@ -40,7 +40,7 @@ impl super::Command for InitCommand {
 
         let out = stages::build("nix", &flake_url.to_string_lossy(), &flake_attr, &[], false)?;
 
-        util::log::success(out.to_string_lossy().dimmed());
+        util::log::success(out.display().dimmed());
 
         eprintln!();
         util::log::info("configuring profile");

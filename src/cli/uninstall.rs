@@ -8,10 +8,13 @@ use std::{
 use walkdir::WalkDir;
 
 use clap::Parser;
-use eyre::{bail, eyre, Result};
+use eyre::{eyre, Result};
 use owo_colors::OwoColorize as _;
 
-use crate::{stages, util};
+use crate::{
+    stages,
+    util::{self, CommandExt as _},
+};
 
 #[derive(serde::Deserialize)]
 struct NixTopLevelData {
@@ -41,17 +44,13 @@ fn build_uninstall_system() -> Result<PathBuf> {
         ])
         .arg(&expr_template)
         .stderr(Stdio::inherit())
-        .output()?;
-
-    if !output.status.success() {
-        bail!("failed to build uninstall system with nix");
-    }
+        .error_for_status("failed to build uninstall system with nix")?;
 
     let build_data: Vec<NixTopLevelData> = serde_json::from_slice(&output.stdout)?;
 
     let out = build_data
         .first()
-        .ok_or_else(|| eyre!("failed to build uninstall system with nix"))?
+        .ok_or_else(|| eyre!("failed to obtain uninstall system build data with nix"))?
         .outputs
         .out
         .parse::<PathBuf>()?;
@@ -105,15 +104,11 @@ fn restore_nix_daemon(nix_daemon: &Path) -> Result<()> {
         nix_daemon,
     ) {
         Ok(_) => {
-            if !Command::new("launchctl")
+            Command::new("launchctl")
                 .args(["load", "-w"])
                 .arg(nix_daemon)
                 .stdout(Stdio::null())
-                .status()?
-                .success()
-            {
-                bail!("failed to load `org.nixos.nix-daemon` into launchctl");
-            }
+                .error_for_status("failed to load `org.nixos.nix-daemon` into launchctl")?;
         }
 
         Err(err) => match err.kind() {
@@ -158,7 +153,7 @@ impl super::Command for UninstallCommand {
 
         util::log::info("building uninstall system");
         let out = build_uninstall_system()?;
-        util::log::success(out.to_string_lossy().dimmed());
+        util::log::success(out.display().dimmed());
 
         if !self.no_confirm
             && !util::log::confirm("are you sure you want to uninstall nix-darwin?", false)?
@@ -187,26 +182,26 @@ impl super::Command for UninstallCommand {
         util::log::info("restoring /etc files before nix-darwin");
         restore_etc_files()?;
 
-        if PathBuf::from("/nix/store").is_dir() {
-            let nix_daemon = PathBuf::from("/Library/LaunchDaemons/org.nixos.nix-daemon.plist");
+        if Path::new("/nix/store").is_dir() {
+            let nix_daemon = Path::new("/Library/LaunchDaemons/org.nixos.nix-daemon.plist");
 
             if !nix_daemon.exists() {
                 util::log::info("restoring nix daemon into launchctl");
-                restore_nix_daemon(&nix_daemon)?;
+                restore_nix_daemon(nix_daemon)?;
             }
         }
 
-        let ca_bundle = PathBuf::from("/etc/ssl/certs/ca-certificates.crt");
+        let ca_bundle = Path::new("/etc/ssl/certs/ca-certificates.crt");
         if !ca_bundle.exists() {
             util::log::info("restoring certificate authority bundle");
-            restore_ca_bundle(&ca_bundle)?;
+            restore_ca_bundle(ca_bundle)?;
         }
 
         util::log::info("removing /run/current-system symlink");
 
-        let current_system_path = PathBuf::from("/run/current-system");
+        let current_system_path = Path::new("/run/current-system");
         if current_system_path.is_symlink() {
-            util::safe_remove_file(&current_system_path)?;
+            util::safe_remove_file(current_system_path)?;
         }
 
         util::log::success("nix-darwin has been uninstalled!");

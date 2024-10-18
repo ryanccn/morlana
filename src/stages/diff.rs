@@ -1,25 +1,23 @@
 use std::{
-    path::{Path, PathBuf},
+    path::Path,
     process::{Command, Stdio},
 };
 
-use eyre::{bail, Result};
+use eyre::Result;
+
+use crate::util::CommandExt as _;
 
 pub fn diff(out: &Path) -> Result<()> {
-    if !PathBuf::from("/run/current-system").exists() {
+    if !Path::new("/run/current-system").exists() {
         return Ok(());
     }
 
-    if !Command::new("nvd")
+    Command::new("nvd")
         .args(["diff", "/run/current-system"])
         .arg(out)
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
-        .status()?
-        .success()
-    {
-        bail!("failed to diff with nvd");
-    }
+        .error_for_status("failed to diff with nvd")?;
 
     Ok(())
 }

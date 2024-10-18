@@ -3,32 +3,24 @@ use std::{
     process::{Command, Stdio},
 };
 
-use eyre::{bail, Result};
+use eyre::Result;
 
-use crate::util;
+use crate::util::{self, CommandExt as _};
 
 pub fn activate_user(out: &Path) -> Result<()> {
-    if !Command::new(out.join("activate-user"))
+    Command::new(out.join("activate-user"))
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
-        .status()?
-        .success()
-    {
-        bail!("failed to activate-user");
-    }
+        .error_for_status("failed to activate-user")?;
 
     Ok(())
 }
 
 pub fn activate(out: &Path) -> Result<()> {
-    if !util::sudo_cmd(out.join("activate"))
+    util::sudo_cmd(out.join("activate"))
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
-        .status()?
-        .success()
-    {
-        bail!("failed to activate");
-    }
+        .error_for_status("failed to activate")?;
 
     Ok(())
 }
