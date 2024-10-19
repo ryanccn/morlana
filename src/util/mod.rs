@@ -23,15 +23,18 @@ pub fn hostname() -> Result<String> {
 
 pub fn which(exe_name: impl AsRef<Path>) -> Option<PathBuf> {
     env::var_os("PATH").and_then(|paths| {
-        env::split_paths(&paths).find_map(|dir| {
-            let full_path = dir.join(&exe_name);
-            if full_path.is_file() {
-                Some(full_path)
-            } else {
-                None
-            }
-        })
+        env::split_paths(&paths)
+            .map(|d| d.join(&exe_name))
+            .find(|f| f.is_file())
     })
+}
+
+pub fn nom_available() -> bool {
+    which("nom").is_some()
+}
+
+pub fn nvd_available() -> bool {
+    which("nvd").is_some()
 }
 
 pub fn safe_remove_file(path: impl AsRef<Path>) -> Result<()> {

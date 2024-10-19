@@ -9,14 +9,6 @@ fn default_profile() -> String {
     "/nix/var/nix/profiles/system".to_owned()
 }
 
-fn default_nom() -> bool {
-    util::which("nom").is_some()
-}
-
-fn default_nvd() -> bool {
-    util::which("nvd").is_some()
-}
-
 #[derive(Parser, Debug)]
 #[allow(clippy::struct_excessive_bools)]
 pub struct SwitchCommand {
@@ -51,7 +43,7 @@ pub struct SwitchCommand {
 
 impl super::Command for SwitchCommand {
     fn action(&self, _global_options: &super::Cli) -> Result<()> {
-        let build_program = if self.nom.unwrap_or_else(default_nom) {
+        let build_program = if self.nom.unwrap_or_else(util::nom_available) {
             "nom"
         } else {
             "nix"
@@ -82,7 +74,7 @@ impl super::Command for SwitchCommand {
 
         util::log::success(out.display().dimmed());
 
-        if self.nvd.unwrap_or_else(default_nvd) {
+        if self.nvd.unwrap_or_else(util::nvd_available) {
             stages::diff(&out)?;
         }
 

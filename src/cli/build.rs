@@ -5,10 +5,6 @@ use owo_colors::OwoColorize as _;
 use crate::stages;
 use crate::util;
 
-fn default_nom() -> bool {
-    util::which("nom").is_some()
-}
-
 #[derive(Parser, Debug)]
 pub struct BuildCommand {
     /// Path to a flake
@@ -30,7 +26,7 @@ pub struct BuildCommand {
 
 impl super::Command for BuildCommand {
     fn action(&self, _global_options: &super::Cli) -> Result<()> {
-        let build_program = if self.nom.unwrap_or_else(default_nom) {
+        let build_program = if self.nom.unwrap_or_else(util::nom_available) {
             "nom"
         } else {
             "nix"
