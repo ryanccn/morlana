@@ -33,7 +33,7 @@ pub struct SwitchCommand {
     nvd: Option<bool>,
 
     /// Extra build flags to pass to Nix
-    #[clap(long)]
+    #[clap(last = true)]
     extra_build_flags: Vec<String>,
 
     /// Use the default choice for confirmation prompts

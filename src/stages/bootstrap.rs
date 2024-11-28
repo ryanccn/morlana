@@ -25,7 +25,7 @@ fn gen_system_template() -> Result<String> {
             &users::get_current_username()
                 .ok_or_else(|| eyre!("could not obtain current username"))?
                 .into_string()
-                .map_err(|_| eyre!("current username is not UTF-8"))?,
+                .map_err(|oss| eyre!("current username {oss:?} is not UTF-8"))?,
         );
 
     Ok(template)

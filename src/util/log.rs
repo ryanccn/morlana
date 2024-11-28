@@ -62,9 +62,9 @@ pub fn confirm(description: &str, default: bool) -> Result<bool> {
 
     if input.is_empty() {
         Ok(default)
-    } else if input.to_lowercase() == "y" {
+    } else if input.eq_ignore_ascii_case("y") {
         Ok(true)
-    } else if input.to_lowercase() == "n" {
+    } else if input.eq_ignore_ascii_case("n") {
         Ok(false)
     } else {
         error("invalid input!");
