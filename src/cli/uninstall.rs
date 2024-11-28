@@ -36,10 +36,9 @@ fn build_uninstall_system() -> Result<PathBuf> {
             "--impure",
             "--json",
             "--no-link",
-            "--extra-experimental-features",
-            "nix-command",
-            "--extra-experimental-features",
-            "flakes",
+            "--option",
+            "extra-experimental-features",
+            "nix-command flakes",
             "--expr",
         ])
         .arg(&expr_template)

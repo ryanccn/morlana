@@ -31,10 +31,9 @@ pub fn build(
             "build",
             "--json",
             "--no-link",
-            "--extra-experimental-features",
-            "nix-command",
-            "--extra-experimental-features",
-            "flakes",
+            "--option",
+            "extra-experimental-features",
+            "nix-command flakes",
         ])
         .args(extra_build_flags)
         .args(["--", &format!("{flake_url}#{flake_attr}.system")])
