@@ -44,7 +44,7 @@ jobs:
       - name: Push to Cachix
         uses: cachix/cachix-action@v14
         with:
-          name: cachix
+          name: ryanccn
           pathsToPush: "${{ steps.build.outputs.out_path }}"
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
