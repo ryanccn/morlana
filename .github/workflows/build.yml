@@ -42,7 +42,7 @@ jobs:
           echo "out_path=$out_path" >> "$GITHUB_OUTPUT"
 
       - name: Push to Cachix
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v15
         with:
           name: ryanccn
           pathsToPush: "${{ steps.build.outputs.out_path }}"
