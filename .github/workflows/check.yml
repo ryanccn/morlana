@@ -19,11 +19,8 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Check
-        run: nix build --fallback --print-build-logs '.#checks.aarch64-darwin.clippy'
+        run: nix build -L --show-trace '.#checks.aarch64-darwin.clippy'
 
       - name: Upload analysis results
         uses: github/codeql-action/upload-sarif@v3
@@ -41,11 +38,8 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Check
-        run: nix build --fallback --print-build-logs '.#checks.aarch64-darwin.rustfmt'
+        run: nix build -L --show-trace '.#checks.aarch64-darwin.rustfmt'
 
   nixfmt:
     runs-on: macos-latest
@@ -57,8 +51,5 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Check
-        run: nix build --fallback --print-build-logs '.#checks.aarch64-darwin.nixfmt'
+        run: nix build -L --show-trace '.#checks.aarch64-darwin.nixfmt'

@@ -35,11 +35,18 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Build
-        run: nix build --fallback --print-build-logs '.#packages.${{ matrix.system }}.morlana'
+        id: build
+        run: |
+          out_path="$(nix build -L --show-trace --print-out-paths '.#packages.${{ matrix.system }}.morlana')"
+          echo "out_path=$out_path" >> "$GITHUB_OUTPUT"
+
+      - name: Push to Cachix
+        uses: cachix/cachix-action@v14
+        with:
+          name: cachix
+          pathsToPush: "${{ steps.build.outputs.out_path }}"
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Generate build provenance attestations
         uses: actions/attest-build-provenance@v2
