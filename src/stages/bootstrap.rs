@@ -22,7 +22,7 @@ fn gen_system_template() -> Result<String> {
         .replace("<HOST_PLATFORM>", &format!("{}-darwin", env::consts::ARCH))
         .replace(
             "<USER>",
-            &users::get_current_username()
+            &uzers::get_current_username()
                 .ok_or_else(|| eyre!("could not obtain current username"))?
                 .into_string()
                 .map_err(|oss| eyre!("current username {oss:?} is not UTF-8"))?,

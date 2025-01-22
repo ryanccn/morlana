@@ -4,6 +4,11 @@
     nix-filter.url = "github:numtide/nix-filter";
   };
 
+  nixConfig = {
+    extra-substituters = [ "https://ryanccn.cachix.org" ];
+    extra-trusted-public-keys = [ "ryanccn.cachix.org-1:Or82F8DeVLJgjSKCaZmBzbSOhnHj82Of0bGeRniUgLQ=" ];
+  };
+
   outputs =
     {
       self,

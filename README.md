@@ -3,7 +3,7 @@
 [nix-darwin](https://github.com/LnL7/nix-darwin) utilities, implemented in Rust
 
 ```sh
-nix run github:ryanccn/morlana
+nix run --accept-flake-config github:ryanccn/morlana
 ```
 
 ## Features
@@ -39,6 +39,15 @@ nix run github:ryanccn/morlana -- uninstall
 ```
 
 For more detailed information on available commands and options, run `morlana --help`.
+
+### Binary cache
+
+```nix
+{
+  extra-substituters = [ "https://ryanccn.cachix.org" ];
+  extra-trusted-public-keys = [ "ryanccn.cachix.org-1:Or82F8DeVLJgjSKCaZmBzbSOhnHj82Of0bGeRniUgLQ=" ];
+}
+```
 
 ## License
 
