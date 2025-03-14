@@ -22,7 +22,7 @@ pub fn error(item: impl Display) {
         "[".red().dimmed(),
         "morlana".red().bold(),
         "]".red().dimmed(),
-        item
+        item.red()
     );
 }
 

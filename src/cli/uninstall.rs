@@ -148,7 +148,7 @@ pub struct UninstallCommand {
 
 impl super::Command for UninstallCommand {
     fn action(&self, _global_options: &super::Cli) -> Result<()> {
-        util::ensure_root();
+        util::check_root();
 
         util::log::info("building uninstall system");
         let out = build_uninstall_system()?;

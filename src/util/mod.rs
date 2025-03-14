@@ -1,9 +1,9 @@
 use std::{
     env,
-    ffi::{CString, OsStr},
+    ffi::OsStr,
     fs, io,
     path::{Path, PathBuf},
-    process::{Command, Stdio},
+    process::{Command, Stdio, exit},
 };
 
 use eyre::Result;
@@ -47,7 +47,7 @@ pub fn safe_remove_file(path: impl AsRef<Path>) -> Result<()> {
     }
 }
 
-pub fn sudo_cmd(program: impl AsRef<OsStr>) -> Command {
+pub fn sudo(program: impl AsRef<OsStr>) -> Command {
     if nix::unistd::Uid::effective().is_root() {
         return Command::new(program);
     }
@@ -73,21 +73,9 @@ pub fn default_flake() -> Result<String> {
     Ok(resolved_url)
 }
 
-pub fn ensure_root() {
+pub fn check_root() {
     if !nix::unistd::Uid::effective().is_root() {
-        let args = env::args();
-
-        let mut argv_cstrings: Vec<CString> =
-            vec![CString::new("sudo").unwrap(), CString::new("-H").unwrap()];
-
-        if let Ok(rust_backtrace_env) = env::var("RUST_BACKTRACE") {
-            argv_cstrings.push(CString::new("env").unwrap());
-            argv_cstrings
-                .push(CString::new(format!("RUST_BACKTRACE={rust_backtrace_env}")).unwrap());
-        }
-
-        argv_cstrings.extend(args.map(|arg| CString::new(arg).unwrap()));
-
-        nix::unistd::execvp(&CString::new("sudo").unwrap(), &argv_cstrings).unwrap();
+        log::error("this command must be run as root!");
+        exit(1);
     }
 }
