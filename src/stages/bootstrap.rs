@@ -3,7 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use eyre::{bail, eyre, Result};
+use eyre::{Result, bail, eyre};
 
 use crate::util;
 

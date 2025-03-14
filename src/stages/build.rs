@@ -5,7 +5,7 @@ use std::{
     process::{Command, Stdio},
 };
 
-use eyre::{eyre, Result};
+use eyre::{Result, eyre};
 
 use crate::util::{self, CommandExt as _};
 

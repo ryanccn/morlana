@@ -1,5 +1,5 @@
 use clap::{Parser, ValueHint};
-use eyre::{eyre, Result};
+use eyre::{Result, eyre};
 use owo_colors::OwoColorize as _;
 
 use crate::stages;

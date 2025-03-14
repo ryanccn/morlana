@@ -8,7 +8,7 @@ use std::{
 use walkdir::WalkDir;
 
 use clap::Parser;
-use eyre::{eyre, Result};
+use eyre::{Result, eyre};
 use owo_colors::OwoColorize as _;
 
 use crate::{
@@ -160,17 +160,10 @@ impl super::Command for UninstallCommand {
             return Ok(());
         }
 
-        eprintln!();
         util::log::info("configuring uninstall profile");
         stages::profile("/nix/var/nix/profiles/system", &out)?;
 
-        util::log::info(format!(
-            "activating uninstall {}",
-            "(activate-user)".dimmed()
-        ));
-        stages::activate_user(&out)?;
-
-        util::log::info(format!("activating uninstall {}", "(activate)".dimmed()));
+        util::log::info("activating uninstall");
         stages::activate(&out)?;
 
         util::log::info("removing residual files");

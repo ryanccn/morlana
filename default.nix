@@ -2,13 +2,11 @@
   lib,
   stdenv,
   rustPlatform,
-  darwin,
   makeBinaryWrapper,
   installShellFiles,
   nix-output-monitor,
   nvd,
   nix-filter,
-  pkg-config,
   self,
   enableLTO ? true,
   enableOptimizeSize ? false,
@@ -22,7 +20,7 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = passthru.cargoToml.package.name;
-  version = passthru.cargoToml.package.version + "-unstable-${year}-${month}-${day}";
+  version = "${passthru.cargoToml.package.version}-unstable-${year}-${month}-${day}";
 
   strictDeps = true;
 
@@ -39,17 +37,9 @@ rustPlatform.buildRustPackage rec {
     lockFile = ./Cargo.lock;
   };
 
-  buildInputs = lib.optionals stdenv.isDarwin [
-    darwin.apple_sdk.frameworks.CoreFoundation
-    darwin.apple_sdk.frameworks.Security
-    darwin.apple_sdk.frameworks.IOKit
-    darwin.libiconv
-  ];
-
   nativeBuildInputs = [
     makeBinaryWrapper
     installShellFiles
-    pkg-config
   ];
 
   postInstall =
@@ -57,13 +47,17 @@ rustPlatform.buildRustPackage rec {
       wrapBins = (lib.optional withNom nix-output-monitor) ++ (lib.optional withNvd nvd);
     in
     ''
-      wrapProgram $out/bin/morlana \
-        --suffix PATH : ${lib.makeBinPath wrapBins}
+      ${lib.optionalString (withNom || withNvd) ''
+        wrapProgram $out/bin/${pname} \
+          --suffix PATH : ${lib.makeBinPath wrapBins}
+      ''}
 
-      installShellCompletion --cmd ${pname} \
-        --bash <("$out/bin/${pname}" completions bash) \
-        --zsh <("$out/bin/${pname}" completions zsh) \
-        --fish <("$out/bin/${pname}" completions fish)
+      ${lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
+        installShellCompletion --cmd ${pname} \
+          --bash <("$out/bin/${pname}" completions bash) \
+          --zsh <("$out/bin/${pname}" completions zsh) \
+          --fish <("$out/bin/${pname}" completions fish)
+      ''}
     '';
 
   doCheck = false;

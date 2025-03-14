@@ -42,15 +42,10 @@ impl super::Command for InitCommand {
 
         util::log::success(out.display().dimmed());
 
-        eprintln!();
         util::log::info("configuring profile");
         stages::profile("/nix/var/nix/profiles/system", &out)?;
 
-        util::log::info(format!("activating {}", "(activate-user)".dimmed()));
-        stages::activate_user(&out)?;
-        eprintln!();
-
-        util::log::info(format!("activating {}", "(activate)".dimmed()));
+        util::log::info("activating");
         stages::activate(&out)?;
 
         Ok(())

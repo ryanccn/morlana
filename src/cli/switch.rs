@@ -82,15 +82,10 @@ impl super::Command for SwitchCommand {
             return Ok(());
         }
 
-        eprintln!();
         util::log::info("configuring profile");
         stages::profile(&self.profile, &out)?;
 
-        util::log::info(format!("activating {}", "(activate-user)".dimmed()));
-        stages::activate_user(&out)?;
-        eprintln!();
-
-        util::log::info(format!("activating {}", "(activate)".dimmed()));
+        util::log::info("activating");
         stages::activate(&out)?;
 
         Ok(())

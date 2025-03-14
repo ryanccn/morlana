@@ -1,7 +1,7 @@
 [package]
 name = "morlana"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 description = "nix-darwin utilities"
 authors = ["Ryan Cao <hello@ryanccn.dev>"]
@@ -12,15 +12,15 @@ categories = ["command-line-utilities", "development-tools"]
 keywords = ["nix", "darwin", "macos", "system"]
 
 [dependencies]
-clap = { version = "4.5.27", features = ["derive", "env", "string"] }
-clap_complete = "4.5.42"
+clap = { version = "4.5.32", features = ["derive", "env", "string"] }
+clap_complete = "4.5.46"
 color-eyre = "0.6.3"
 enum_dispatch = "0.3.13"
 eyre = "0.6.12"
 nix = { version = "0.29.0", features = ["process", "user"] }
-owo-colors = "4.1.0"
-serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.137"
+owo-colors = "4.2.0"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
 uzers = "0.12.1"
 walkdir = "2.5.0"
 
