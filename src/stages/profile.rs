@@ -5,7 +5,7 @@ use eyre::Result;
 use crate::util::{self, CommandExt as _};
 
 pub fn profile(profile: &str, out: &Path) -> Result<()> {
-    util::sudo_cmd("nix-env")
+    util::sudo("nix-env")
         .arg("-p")
         .arg(profile)
         .arg("--set")
