@@ -36,5 +36,5 @@
 
   nixpkgs.hostPlatform = "<HOST_PLATFORM>";
 
-  system.stateVersion = 4;
+  system.stateVersion = 5;
 }
