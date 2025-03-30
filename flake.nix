@@ -1,7 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-filter.url = "github:numtide/nix-filter";
   };
 
   nixConfig = {
@@ -13,7 +12,6 @@
     {
       self,
       nixpkgs,
-      nix-filter,
     }:
     let
       inherit (nixpkgs) lib;
@@ -34,44 +32,55 @@
           mkFlakeCheck =
             {
               name,
-              nativeBuildInputs ? [ ],
               command,
-            }:
-            pkgs.stdenv.mkDerivation {
-              name = "check-${name}";
-              inherit nativeBuildInputs;
-              inherit (self.packages.${system}.morlana) src cargoDeps;
+              ...
+            }@args:
+            pkgs.stdenv.mkDerivation (
+              {
+                name = "check-${name}";
+                inherit (self.packages.${system}.morlana) src;
 
-              buildPhase = ''
-                ${command}
-                touch "$out"
-              '';
+                buildPhase = ''
+                  ${command}
+                  touch "$out"
+                '';
 
-              doCheck = false;
-              dontInstall = true;
-              dontFixup = true;
-            };
+                doCheck = false;
+                dontInstall = true;
+                dontFixup = true;
+              }
+              // (removeAttrs args [
+                "name"
+                "command"
+              ])
+            );
         in
         {
           nixfmt = mkFlakeCheck {
             name = "nixfmt";
+            command = "find . -name '*.nix' -exec nixfmt --check {} +";
+
+            src = self;
             nativeBuildInputs = with pkgs; [ nixfmt-rfc-style ];
-            command = "nixfmt --check .";
           };
 
           rustfmt = mkFlakeCheck {
             name = "rustfmt";
+            command = "cargo fmt --check";
 
             nativeBuildInputs = with pkgs; [
               cargo
               rustfmt
             ];
-
-            command = "cargo fmt --check";
           };
 
           clippy = mkFlakeCheck {
             name = "clippy";
+            command = ''
+              cargo clippy --all-features --all-targets \
+                --offline --message-format=json \
+                | clippy-sarif | tee $out | sarif-fmt
+            '';
 
             nativeBuildInputs = with pkgs; [
               rustPlatform.cargoSetupHook
@@ -82,11 +91,7 @@
               sarif-fmt
             ];
 
-            command = ''
-              cargo clippy --all-features --all-targets \
-                --offline --message-format=json \
-                | clippy-sarif | tee $out | sarif-fmt
-            '';
+            inherit (self.packages.${system}.morlana) cargoDeps;
           };
         }
       );
@@ -102,12 +107,6 @@
               rustfmt
               clippy
               rust-analyzer
-
-              cargo-audit
-              cargo-bloat
-              cargo-expand
-
-              libiconv
             ];
 
             inputsFrom = [ self.packages.${system}.morlana ];
@@ -135,7 +134,7 @@
       formatter = forAllSystems (system: nixpkgsFor.${system}.nixfmt-rfc-style);
 
       overlays.default = _: prev: {
-        morlana = prev.callPackage ./default.nix { inherit nix-filter self; };
+        morlana = prev.callPackage ./package.nix { inherit self; };
       };
     };
 }

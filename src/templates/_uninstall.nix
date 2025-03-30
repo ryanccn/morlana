@@ -1,4 +1,4 @@
-((builtins.getFlake "github:LnL7/nix-darwin").lib.darwinSystem {
+((builtins.getFlake "github:nix-darwin/nix-darwin").lib.darwinSystem {
   modules = [
     (
       { lib, ... }:

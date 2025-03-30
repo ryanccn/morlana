@@ -18,6 +18,8 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
+        with:
+          diagnostic-endpoint: ""
 
       - name: Check
         run: nix build -L --show-trace '.#checks.aarch64-darwin.clippy'
@@ -50,6 +52,8 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
+        with:
+          diagnostic-endpoint: ""
 
       - name: Check
         run: nix build -L --show-trace '.#checks.aarch64-darwin.nixfmt'
