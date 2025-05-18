@@ -1,4 +1,5 @@
 use std::{
+    fs,
     path::Path,
     process::{Command, Stdio},
 };
@@ -8,7 +9,10 @@ use eyre::Result;
 use crate::util::{self, CommandExt as _};
 
 pub fn activate(out: &Path) -> Result<()> {
-    let system_wide_activation = !out.join("activate-user").try_exists()?;
+    let system_wide_activation = fs::read_to_string(out.join("activate-user"))
+        .ok()
+        .is_none_or(|script| script.contains("nix-darwin: deprecated"));
+
     let darwin_rebuild = out.join("sw").join("bin").join("darwin-rebuild");
 
     if system_wide_activation {
