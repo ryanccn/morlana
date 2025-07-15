@@ -13,7 +13,7 @@ keywords = ["nix", "darwin", "macos", "system"]
 
 [dependencies]
 clap = { version = "4.5.38", features = ["derive", "env", "string"] }
-clap_complete = "4.5.50"
+clap_complete = "4.5.55"
 color-eyre = "0.6.4"
 enum_dispatch = "0.3.13"
 eyre = "0.6.12"
