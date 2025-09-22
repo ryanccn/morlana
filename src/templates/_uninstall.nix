@@ -15,6 +15,8 @@
         launchd.agents = mkForce { };
         launchd.daemons = mkForce { };
         launchd.user.agents = mkForce { };
+
+        nix.enable = false;
       }
     )
   ];

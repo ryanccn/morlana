@@ -11,20 +11,39 @@
   };
 
   outputs =
-    {
-      self,
-      nix-darwin,
-      ...
-    }@inputs:
+    { self, nix-darwin, ... }:
+    let
+      configuration =
+        { pkgs, ... }:
+        {
+          environment.systemPackages = [
+            pkgs.vim
+          ];
+
+          nix.package = pkgs.nixVersions.latest;
+          nix.settings = {
+            experimental-features = [
+              "nix-command"
+              "flakes"
+            ];
+
+            extra-platforms = [
+              "aarch64-darwin"
+              "x86_64-darwin"
+            ];
+
+            trusted-users = [ "<USER>" ];
+          };
+
+          nixpkgs.hostPlatform = "aarch64-darwin";
+
+          system.configurationRevision = self.rev or self.dirtyRev or null;
+          system.stateVersion = 6;
+        };
+    in
     {
       darwinConfigurations.HOSTNAME = nix-darwin.lib.darwinSystem {
-        modules = [
-          ./system.nix
-        ];
-
-        specialArgs = {
-          inherit self inputs;
-        };
+        modules = [ configuration ];
       };
     };
 }
