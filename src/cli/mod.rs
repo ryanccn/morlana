@@ -7,6 +7,7 @@ mod completions;
 mod init;
 mod switch;
 mod uninstall;
+mod wipe_history;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -32,6 +33,9 @@ pub enum Commands {
     Init(init::InitCommand),
     /// Do not go gentle into that good night
     Uninstall(uninstall::UninstallCommand),
+
+    /// Delete old versions of nix-darwin and Home Manager profiles
+    WipeHistory(wipe_history::WipeHistoryCommand),
 
     /// Generate completions
     Completions(completions::CompletionCommand),
