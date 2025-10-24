@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Ryan Cao <hello@ryanccn.dev>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 use clap::{Parser, ValueHint};
 use eyre::{Result, eyre};
 use owo_colors::OwoColorize as _;

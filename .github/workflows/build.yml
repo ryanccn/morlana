@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Ryan Cao <hello@ryanccn.dev>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 name: Build
 
 on:
@@ -6,7 +10,6 @@ on:
   pull_request:
     branches: ["main"]
   workflow_call:
-  workflow_dispatch:
 
 jobs:
   build:
@@ -31,9 +34,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - name: Install Nix
-        uses: cachix/install-nix-action@a809471b5c7c913aa67bec8f459a11a0decc3fce # ratchet:cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # ratchet:cachix/install-nix-action@v31
 
       - name: Build
         id: build
@@ -55,7 +60,7 @@ jobs:
           subject-path: ./result/bin/morlana
 
       - name: Upload artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # ratchet:actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # ratchet:actions/upload-artifact@v5
         with:
           if-no-files-found: "error"
           name: morlana-${{ matrix.system }}

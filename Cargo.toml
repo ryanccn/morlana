@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Ryan Cao <hello@ryanccn.dev>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 [package]
 name = "morlana"
 version = "0.1.0"
@@ -5,21 +9,21 @@ edition = "2024"
 
 description = "nix-darwin utilities"
 authors = ["Ryan Cao <hello@ryanccn.dev>"]
-license = "GPL-3.0-only"
+license = "GPL-3.0-or-later"
 repository = "https://github.com/ryanccn/morlana.git"
 
 categories = ["command-line-utilities", "development-tools"]
 keywords = ["nix", "darwin", "macos", "system"]
 
 [dependencies]
-clap = { version = "4.5.48", features = ["derive", "env", "string"] }
-clap_complete = "4.5.58"
+clap = { version = "4.5.50", features = ["derive", "env", "string"] }
+clap_complete = "4.5.59"
 color-eyre = "0.6.5"
 enum_dispatch = "0.3.13"
 eyre = "0.6.12"
 nix = { version = "0.30.1", features = ["process", "user"] }
-owo-colors = "4.2.2"
-serde = { version = "1.0.226", features = ["derive"] }
+owo-colors = "4.2.3"
+serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 uzers = "0.12.1"
 walkdir = "2.5.0"
