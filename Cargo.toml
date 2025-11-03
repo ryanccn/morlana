@@ -16,8 +16,8 @@ categories = ["command-line-utilities", "development-tools"]
 keywords = ["nix", "darwin", "macos", "system"]
 
 [dependencies]
-clap = { version = "4.5.50", features = ["derive", "env", "string"] }
-clap_complete = "4.5.59"
+clap = { version = "4.5.51", features = ["derive", "env", "string"] }
+clap_complete = "4.5.60"
 color-eyre = "0.6.5"
 enum_dispatch = "0.3.13"
 eyre = "0.6.12"
