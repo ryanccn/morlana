@@ -42,8 +42,13 @@ pub fn dix(out: &Path) -> Result<()> {
 
     let closure_size_handle = dix::spawn_size_diff(old_path.clone(), new_path.clone(), true);
 
-    dix::write_package_diff(&mut WriteFmt(io::stdout()), &old_path, &new_path, true)
-        .map_err(|e| eyre!(Box::new(e)))?;
+    let wrote_diff =
+        dix::write_package_diff(&mut WriteFmt(io::stdout()), &old_path, &new_path, true)
+            .map_err(|e| eyre!(Box::new(e)))?;
+
+    if wrote_diff > 0 {
+        println!();
+    }
 
     let (size_old, size_new) = closure_size_handle
         .join()
