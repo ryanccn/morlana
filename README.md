@@ -15,7 +15,7 @@ nix run --accept-flake-config github:ryanccn/morlana
 ## Features
 
 - Support for better build logs with [nix-output-monitor](https://github.com/maralorn/nix-output-monitor)
-- Support for diffing with [nvd](https://gitlab.com/khumba/nvd) before switching configurations
+- Support for diffing with [dix](https://github.com/faukah/dix) or [nvd](https://gitlab.com/khumba/nvd) before switching configurations
 - Confirmation prompts for important actions
 - Flakes-first (_does not work with channels setups at the moment_)
 - Improved uninstaller logic

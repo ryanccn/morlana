@@ -32,9 +32,9 @@ pub struct SwitchCommand {
     #[clap(long)]
     nom: Option<bool>,
 
-    /// Whether to use nvd [defaults to true if `nvd` is in PATH]
+    /// Whether to try and use nvd instead of dix
     #[clap(long)]
-    nvd: Option<bool>,
+    nvd: bool,
 
     /// Extra build flags to pass to Nix
     #[clap(last = true)]
@@ -78,8 +78,10 @@ impl super::Command for SwitchCommand {
 
         util::log::success(out.display().dimmed());
 
-        if self.nvd.unwrap_or_else(util::nvd_available) {
-            stages::diff(&out)?;
+        if self.nvd {
+            stages::diff::nvd(&out)?;
+        } else {
+            stages::diff::dix(&out)?;
         }
 
         if !self.no_confirm && !util::log::confirm("switch to configuration?", false)? {

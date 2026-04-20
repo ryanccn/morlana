@@ -13,5 +13,6 @@
     ferrix.lib.mkFlake inputs {
       root = ./.;
       systems = nixpkgs.lib.platforms.darwin;
+      completions.enable = true;
     };
 }

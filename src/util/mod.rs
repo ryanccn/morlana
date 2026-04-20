@@ -37,10 +37,6 @@ pub fn nom_available() -> bool {
     which("nom").is_some()
 }
 
-pub fn nvd_available() -> bool {
-    which("nvd").is_some()
-}
-
 pub fn safe_remove_file(path: impl AsRef<Path>) -> Result<()> {
     match fs::remove_file(path) {
         Ok(()) => Ok(()),
