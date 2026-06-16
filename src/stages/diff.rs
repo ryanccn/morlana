@@ -8,7 +8,7 @@ use std::{
     process::{Command, Stdio},
 };
 
-use eyre::{Result, eyre};
+use eyre::Result;
 use owo_colors::OwoColorize as _;
 
 use crate::util::CommandExt as _;
@@ -40,22 +40,8 @@ pub fn dix(out: &Path) -> Result<()> {
         new_path.display().green()
     );
 
-    let closure_size_handle = dix::spawn_size_diff(old_path.clone(), new_path.clone(), true);
-
-    let wrote_diff =
-        dix::write_package_diff(&mut WriteFmt(io::stdout()), &old_path, &new_path, true)
-            .map_err(|e| eyre!(Box::new(e)))?;
-
-    if wrote_diff > 0 {
-        println!();
-    }
-
-    let (size_old, size_new) = closure_size_handle
-        .join()
-        .map_err(|_| eyre!("failed to calculate closure sizes with dix"))?
-        .map_err(|e| eyre!(Box::new(e)))?;
-
-    dix::write_size_diff(&mut WriteFmt(io::stdout()), size_old, size_new)?;
+    let report = dix::query_diff_report(&old_path, &new_path, false)?;
+    dix::write_diff_report(&mut WriteFmt(io::stdout()), &report)?;
 
     Ok(())
 }
