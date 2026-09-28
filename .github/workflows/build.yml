@@ -33,12 +33,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # ratchet:actions/checkout@v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Install Nix
-        uses: cachix/install-nix-action@a49548c11d9846ad46ecc0115273879b045f001c # ratchet:cachix/install-nix-action@v31.10.7
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # ratchet:cachix/install-nix-action@v31.11.1
 
       - name: Build
         id: build
@@ -47,14 +47,14 @@ jobs:
           echo "out_path=$out_path" >> "$GITHUB_OUTPUT"
 
       - name: Push to Cachix
-        uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # ratchet:cachix/cachix-action@v17
+        uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # ratchet:cachix/cachix-action@v17
         with:
           name: ryanccn
           pathsToPush: "${{ steps.build.outputs.out_path }}"
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Generate build provenance attestations
-        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # ratchet:actions/attest-build-provenance@v4
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # ratchet:actions/attest-build-provenance@v4
         if: ${{ github.event_name != 'pull_request' }}
         with:
           subject-path: ./result/bin/morlana
