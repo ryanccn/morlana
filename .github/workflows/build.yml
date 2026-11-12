@@ -17,18 +17,6 @@ jobs:
       id-token: write
       attestations: write
 
-    strategy:
-      matrix:
-        target:
-          - aarch64-apple-darwin
-          - x86_64-apple-darwin
-        include:
-          - target: aarch64-apple-darwin
-            system: aarch64-darwin
-          - target: x86_64-apple-darwin
-            system: x86_64-darwin
-      fail-fast: false
-
     runs-on: macos-latest
 
     steps:
@@ -43,7 +31,7 @@ jobs:
       - name: Build
         id: build
         run: |
-          out_path="$(nix build -L --show-trace --print-out-paths '.#packages.${{ matrix.system }}.morlana')"
+          out_path="$(nix build -L --show-trace --print-out-paths '.#morlana')"
           echo "out_path=$out_path" >> "$GITHUB_OUTPUT"
 
       - name: Push to Cachix
@@ -63,5 +51,5 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # ratchet:actions/upload-artifact@v7
         with:
           if-no-files-found: "error"
-          name: morlana-${{ matrix.system }}
+          name: morlana
           path: ./result/bin/morlana

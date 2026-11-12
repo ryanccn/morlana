@@ -14,5 +14,7 @@
       root = ./.;
       systems = nixpkgs.lib.platforms.darwin;
       completions.enable = true;
+
+      env.dontCargoUseSystemLibs = "1";
     };
 }
