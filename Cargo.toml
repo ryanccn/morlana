@@ -8,7 +8,6 @@ version = "0.1.0"
 edition = "2024"
 
 description = "nix-darwin utilities"
-authors = ["Ryan Cao <hello@ryanccn.dev>"]
 license = "GPL-3.0-or-later"
 repository = "https://github.com/ryanccn/morlana.git"
 
@@ -16,18 +15,18 @@ categories = ["command-line-utilities", "development-tools"]
 keywords = ["nix", "darwin", "macos", "system"]
 
 [dependencies]
-clap = { version = "4.6.1", features = ["derive", "env", "string"] }
-clap_complete = "4.6.5"
+clap = { version = "4.6.10", features = ["derive", "env", "string"] }
+clap_complete = "4.6.12"
 color-eyre = "0.6.5"
-dix = "2.0.1"
+dix = "3.0.0"
 enum_dispatch = "0.3.13"
-eyre = "0.6.12"
-nix = { version = "0.31.3", features = ["process", "user"] }
-owo-colors = "4.3.0"
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.150"
+eyre = "0.6.14"
+nix = { version = "0.32.0", features = ["process", "user"] }
+owo-colors = "4.4.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
 uzers = "0.12.2"
-walkdir = "2.5.0"
+walkdir = "2.5.1"
 
 [lints.clippy]
 all = { level = "warn", priority = -1 }

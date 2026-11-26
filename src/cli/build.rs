@@ -52,7 +52,8 @@ impl super::Command for BuildCommand {
             .ok_or_else(|| eyre!("no attribute was provided and one could not be inferred!"))?;
 
         util::log::info(format!(
-            "building system {}",
+            "building system {} {}",
+            format!("{flake_url}#{flake_attr}").blue(),
             format!("({build_program})").dimmed()
         ));
 

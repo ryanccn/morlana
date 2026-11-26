@@ -64,7 +64,8 @@ impl super::Command for SwitchCommand {
             .unwrap_or(format!("darwinConfigurations.{}", util::hostname()?));
 
         util::log::info(format!(
-            "building system {}",
+            "building system {} {}",
+            format!("{flake_url}#{flake_attr}").blue(),
             format!("({build_program})").dimmed()
         ));
 
@@ -76,8 +77,6 @@ impl super::Command for SwitchCommand {
             false,
         )?;
 
-        util::log::success(out.display().dimmed());
-
         if self.nvd {
             stages::diff::nvd(&out)?;
         } else {
@@ -88,11 +87,13 @@ impl super::Command for SwitchCommand {
             return Ok(());
         }
 
-        util::log::info("configuring profile");
+        util::log::info(format!("configuring profile {}", self.profile.blue()));
         stages::profile(&self.profile, &out)?;
 
         util::log::info("activating");
         stages::activate(&out)?;
+
+        util::log::success(format!("switched to {}", out.display().green()));
 
         Ok(())
     }

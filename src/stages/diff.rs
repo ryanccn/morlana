@@ -8,7 +8,7 @@ use std::{
     process::{Command, Stdio},
 };
 
-use eyre::Result;
+use eyre::{Result, eyre};
 use owo_colors::OwoColorize as _;
 
 use crate::util::CommandExt as _;
@@ -40,8 +40,24 @@ pub fn dix(out: &Path) -> Result<()> {
         new_path.display().green()
     );
 
-    let report = dix::query_diff_report(&old_path, &new_path, false)?;
-    dix::write_diff_report(&mut WriteFmt(io::stdout()), &report)?;
+    let store = dix::Store::open();
+
+    let report = dix::diff_store_snapshots(
+        &store
+            .query_snapshot_document(&old_path)
+            .map_err(|e| eyre!("{e:?}"))?
+            .snapshot,
+        &store
+            .query_snapshot_document(&new_path)
+            .map_err(|e| eyre!("{e:?}"))?
+            .snapshot,
+    );
+
+    dix::write_diff_report(
+        &mut WriteFmt(io::stdout()),
+        &report,
+        dix::RenderOptions::default(),
+    )?;
 
     Ok(())
 }

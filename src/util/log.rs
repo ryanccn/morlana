@@ -12,7 +12,7 @@ use owo_colors::OwoColorize as _;
 
 pub fn info(item: impl Display) {
     eprintln!(
-        "{}{}{}  {}",
+        "{}{}{} {}",
         "[".blue().dimmed(),
         "morlana".blue().bold(),
         "]".blue().dimmed(),
@@ -22,7 +22,7 @@ pub fn info(item: impl Display) {
 
 pub fn error(item: impl Display) {
     eprintln!(
-        "{}{}{}  {}",
+        "{}{}{} {}",
         "[".red().dimmed(),
         "morlana".red().bold(),
         "]".red().dimmed(),
@@ -32,7 +32,7 @@ pub fn error(item: impl Display) {
 
 pub fn warn(item: impl Display) {
     eprintln!(
-        "{}{}{}  {}",
+        "{}{}{} {}",
         "[".yellow().dimmed(),
         "morlana".yellow().bold(),
         "]".yellow().dimmed(),
@@ -42,7 +42,7 @@ pub fn warn(item: impl Display) {
 
 pub fn success(item: impl Display) {
     eprintln!(
-        "{}{}{}  {}",
+        "{}{}{} {}",
         "[".green().dimmed(),
         "morlana".green().bold(),
         "]".green().dimmed(),
@@ -52,7 +52,7 @@ pub fn success(item: impl Display) {
 
 pub fn confirm(description: &str, default: bool) -> Result<bool> {
     eprint!(
-        "{}{}{}  {} {} ",
+        "{}{}{} {} {} ",
         "[".cyan().dimmed(),
         "morlana".cyan().bold(),
         "]".cyan().dimmed(),
