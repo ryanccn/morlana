@@ -15,6 +15,11 @@
       systems = nixpkgs.lib.platforms.darwin;
       completions.enable = true;
 
-      env.dontCargoUseSystemLibs = "1";
+      buildInputs = pkgs: [ pkgs.sqlite ];
+
+      env = {
+        dontCargoUseSystemLibs = "1";
+        LIBSQLITE3_SYS_USE_PKG_CONFIG = "1";
+      };
     };
 }
